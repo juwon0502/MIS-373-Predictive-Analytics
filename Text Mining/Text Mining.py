@@ -15,6 +15,7 @@ with st.echo():
   from sklearn.ensemble import RandomForestClassifier
   from sklearn.model_selection import train_test_split, cross_val_score
   from sklearn.metrics import plot_confusion_matrix, plot_roc_curve, accuracy_score
+  from sklearn.feature_extraction.text import CountVectorizer
 
 # remove warnings on webstie
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -33,11 +34,6 @@ def clean_df(df):
   cols = list(df.columns)
   for col in cols:
     try:
-      df[col] = df[col].str.decode('utf-8')
-    except:
-      df[col] = pd.to_numeric(df[col])
-      pass
-    try:
       df = df.replace({col: {'Yes': 1, 'No': 0}})
     except:
       pass
@@ -45,6 +41,16 @@ def clean_df(df):
   return df
 
 st.write(movie_df.head(20))
+
+st.write("### Bag of Words Vectorization")
+
+with st.echo():
+  # corpus = movie_df.text
+  vectorizer = CountVectorizer(binary = True)
+  train_X = vectorizer.fit_transform(movie_df.text)
+  st.write(train_X[0])
+  # st.write(vectorizer.get_feature_names())
+  # st.write(X)
 
 # df = pd.get_dummies(clean_df(arff_df))
 
@@ -101,16 +107,16 @@ st.write(movie_df.head(20))
 # option = st.selectbox("column", arff_df.columns, index = 0)
 # display_attribute(arff_df, meta, option)
 
-# create model
-st.title("Create Model")
-st.write("Python Code to create model")
-with st.echo():
-  X = df.drop(columns=['Attrition'])
-  y = df.Attrition
-  # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.33)
-  # max_depth = st.number_input(label = 'max_depth', value = 5, min_value = 1, step = 1)
-  max_features = st.number_input(label = 'Number of features', min_value = 4, max_value = 8, value = 4)
-  model = RandomForestClassifier(criterion = 'entropy', max_features = max_features).fit(X,y)
+# # create model
+# st.title("Create Model")
+# st.write("Python Code to create model")
+# with st.echo():
+#   X = df.drop(columns=['Attrition'])
+#   y = df.Attrition
+#   # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.33)
+#   # max_depth = st.number_input(label = 'max_depth', value = 5, min_value = 1, step = 1)
+#   max_features = st.number_input(label = 'Number of features', min_value = 4, max_value = 8, value = 4)
+#   model = RandomForestClassifier(criterion = 'entropy', max_features = max_features).fit(X,y)
 
 
 # st.write("#### Classification Accuracy: ", round(float(accuracy_score(model.predict(X_test), y_test)),4))

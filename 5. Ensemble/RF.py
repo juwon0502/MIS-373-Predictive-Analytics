@@ -106,22 +106,10 @@ with st.echo():
   std = scores.std()
 st.write(f"#### {round(accuracy,4)} accuracy with a standard deviation of {round(std,4)}")
 
-# @st.cache(suppress_st_warning = True)
-# def four_to_six():
-#   for i in range(4, 7):
-#       X = df.drop(columns=['Attrition'])
-#       y = df.Attrition
-#       max_features = i
-#       model = RandomForestClassifier(criterion = 'entropy', max_features = max_features).fit(X,y)
-#       scores = cross_val_score(model, X, y, cv=10)
-#       st.write(f"{i} features has an accuracy of {round(scores.mean(),4)}")
-#       return
-
-# four_to_six()
-
 st.write("### Compare to regular Decision Tree")
-model = DecisionTreeClassifier().fit(X,y)
+model = DecisionTreeClassifier(criterion = 'entropy').fit(X,y)
 scores = cross_val_score(model, X, y, cv=10)
+st.write(scores)
 st.write(f"#### {round(scores.mean(),4)} accuracy with a standard deviation of {round(scores.std(),4)}")
 
 st.write("\n\n")
