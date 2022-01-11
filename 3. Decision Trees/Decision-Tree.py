@@ -9,7 +9,6 @@ with st.echo():
   import pandas as pd
   import numpy as np
   import arff
-  # from scipy.io import arff
   from matplotlib import pyplot as plt
   from sklearn import tree
   from sklearn.tree import plot_tree, export_text
@@ -34,22 +33,16 @@ def clean_df(df):
   # decode str values
   cols = list(df.columns)
   for col in cols:
-    # try:
-    #   df[col] = df[col].str.decode('utf-8')
-    # except:
-    #   df[col] = pd.to_numeric(df[col])
-    #   pass
     try:
-      df = df.replace({col: {'YES': 1, 'NO': 0}})
+      df = df.replace({col: {'YES': True, 'NO': False}})
     except:
       pass
     pass
   return df
 
-
-training_df_dummy = pd.get_dummies(clean_df(training_df))
-# training_df_dummy = clean_df(training_df)
-# testing_df_dummy = pd.get_dummies(clean_df(testing_df))
+training_df = clean_df(training_df)
+training_df_dummy = pd.get_dummies(training_df)
+testing_df_dummy = pd.get_dummies(clean_df(testing_df))
 
 
 st.write("Training Data:", training_df_dummy.head(10))
@@ -58,8 +51,7 @@ st.write("## Visualize Attributes")
 # display attributes
 def display_attribute(df, meta, col_name):
   col_val = [item[0] for item in meta]
-  pep = df.loc[df['pep'] == '1']
-  st.write(type(df.pep[0]))
+  pep = df.loc[df['pep'] == True]
   pep_col_name = []
   no_pep_col_name = []
   if type(meta[col_val.index(col_name)][1]) == list:
